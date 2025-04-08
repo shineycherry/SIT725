@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
+const Project = require('./models/projectModel');
+
+// Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/myprojectDB');
 
-const Project = mongoose.model('Project', {
-    title: String,
-    image: String,
-    link: String,
-    description: String
+// Define kitten cards
+const kitten1 = new Project({
+    title: "Kitten 1",
+    image: "images/kitten1.jpeg",
+    link: "About Kitten 1",
+    description: "Demo description about kitten 1"
 });
 
 const kitten2 = new Project({
@@ -22,9 +26,10 @@ const kitten3 = new Project({
     description: "Demo description about kitten 3"
 });
 
-Project.insertMany([kitten2, kitten3])
+// Insert all kittens
+Project.insertMany([kitten1, kitten2, kitten3])
     .then(() => {
-        console.log("Kitten 2 and 3 added successfully!");
+        console.log("Kitten 1, 2 and 3 added successfully!");
         mongoose.connection.close();
     })
     .catch(err => console.error("Error:", err));

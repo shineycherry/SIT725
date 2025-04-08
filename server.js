@@ -1,34 +1,39 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const path = require('path');
+const projectRoutes = require('./routes/projectRoutes');
+
+dotenv.config(); // Load .env file
+
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
-app.use(express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'views')));
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/myprojectDB');
-mongoose.connection.on('connected', () => {
-    console.log("Connected to MongoDB");
+// Use Routes
+app.use('/api/projects', projectRoutes);
+
+// Serve homepage
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
-// Schema and Model
-const Project = mongoose.model('Project', {
-    title: String,
-    image: String,
-    link: String,
-    description: String
-});
-
-// REST API
-app.get('/api/projects', async (req, res) => {
-    const projects = await Project.find({});
-    res.json({ statusCode: 200, data: projects, message: "Success" });
-});
-
-// Start Server
-app.listen(port, () => {
-    console.log(`App listening on http://localhost:${port}`);
-});
+// Connect to MongoDB and start server
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+    .then(() => {
+        console.log("Connected to MongoDB");
+        app.listen(port, () => {
+            console.log(`Server running at http://localhost:${port}`);
+        });
+    })
+    .catch((err) => {
+        console.error("MongoDB connection error:", err);
+    });
