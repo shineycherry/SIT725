@@ -1,39 +1,29 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const path = require('path');
-const projectRoutes = require('./routes/projectRoutes');
-
-dotenv.config(); // Load .env file
+const bodyParser = require('body-parser');
+const itemRoutes = require('./routes/items'); // Correct route import
 
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = 3000;
 
 // Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'views')));
+app.use(bodyParser.json());
 
-// Use Routes
-app.use('/api/projects', projectRoutes);
+// Routes
+app.use('/api/items', itemRoutes);
 
-// Serve homepage
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'index.html'));
+    res.send('Welcome to Smart Inventory Manager');
 });
 
-// Connect to MongoDB and start server
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect('mongodb://localhost:27017/inventory_db', {
     useNewUrlParser: true,
     useUnifiedTopology: true
-})
-    .then(() => {
-        console.log("Connected to MongoDB");
-        app.listen(port, () => {
-            console.log(`Server running at http://localhost:${port}`);
-        });
-    })
-    .catch((err) => {
-        console.error("MongoDB connection error:", err);
+}).then(() => {
+    console.log('MongoDB connected');
+    app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`);
     });
+}).catch((err) => {
+    console.error('MongoDB connection error:', err);
+});
