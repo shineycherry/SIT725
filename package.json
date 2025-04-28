@@ -1,31 +1,18 @@
 {
-  "name": "smart-inventory-manager",
+  "name": "smart-inventory-manager-socket",
   "version": "1.0.0",
-  "description": "A simple inventory management system using Node.js, Express, and MongoDB",
-  "main": "server.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "mocha --reporter spec"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "inventory",
-    "express",
-    "mongodb",
-    "nodejs",
-    "testing",
-    "mocha",
-    "chai"
-  ],
-  "author": "Indraja Polkampalli",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^2.2.0",
     "express": "^5.1.0",
-    "mongoose": "^8.13.2"
-  },
-  "devDependencies": {
-    "chai": "^4.3.7",
-    "mocha": "^11.1.0",
-    "request": "^2.88.2"
+    "mongodb": "^6.16.0",
+    "socket.io": "^4.8.1"
   }
 }

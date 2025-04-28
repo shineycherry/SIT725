@@ -2,80 +2,38 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SIT725 Week 5 MVC Model</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <title>Adding Sockets for Smart Inventory Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 </head>
 
 <body>
-    <nav>
-        <div class="nav-wrapper navbar-size">
-            <a href="#" class="brand-logo">
-                <img class="user-image-size" src="images/user image.jpeg" />
-            </a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="#!">LinkedIn</a></li>
-            </ul>
-        </div>
-    </nav>
 
-    <main class="main-body">
-        <div class="container">
-            <div class="row">
-                <div class="col s12 center-align">
-                    <h1>Welcome to SIT725 Week 5</h1>
-                    <p class="flow-text">
-                        This application demonstrates MVC architecture using Materialize, MongoDB, and Express.
-                    </p>
-                    <img class="materialboxed materialboxed-image" src="images/live demo.jpeg" />
-                </div>
-                <div class="col s12 center-align">
-                    <a class="waves-effect waves-light btn modal-trigger" data-target="modal1">
-                        <i class="material-icons left">auto_fix_high</i>Click Me
-                    </a>
-                </div>
+    <div class="container">
+        <h3>Smart Inventory Manager</h3>
+
+        <!-- Add New Item Form -->
+        <form action="/add" method="POST">
+            <div class="input-field">
+                <input type="text" id="title" name="title" required>
+                <label for="title">Item Title</label>
             </div>
-
-            <div class="row" id="card-section">
-                <!-- Kitten cards will be loaded here by scripts.js -->
+            <div class="input-field">
+                <input type="text" id="description" name="description" required>
+                <label for="description">Item Description</label>
             </div>
-        </div>
+            <button class="btn waves-effect waves-light" type="submit">Add Item</button>
+        </form>
 
-        <!-- Modal -->
-        <div id="modal1" class="modal modal-fixed-footer">
-            <div class="row modal-content">
-                <h4>Submit Form</h4>
-                <form class="col s12">
-                    <div class="input-field col s6">
-                        <input placeholder="Enter first name" id="first_name" type="text" class="validate" />
-                        <label for="first_name">First Name</label>
-                    </div>
-                    <div class="input-field col s6">
-                        <input id="last_name" type="text" class="validate" />
-                        <label for="last_name">Last Name</label>
-                    </div>
-                    <div class="input-field col s12">
-                        <input id="password" type="password" class="validate" />
-                        <label for="password">Password</label>
-                    </div>
-                    <div class="input-field col s12">
-                        <input id="email" type="email" />
-                        <label for="email">Email</label>
-                    </div>
-                    <div class="input-field col s12 center-align">
-                        <a class="waves-effect waves-light btn" id="formSubmit">Submit</a>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </main>
+        <!-- Placeholder for inventory list (optional) -->
+        <div id="inventory-list" style="margin-top:30px;"></div>
+    </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Sockets -->
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- Your custom JS -->
     <script src="scripts.js"></script>
+
 </body>
 
 </html>

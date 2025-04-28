@@ -1,29 +1,58 @@
+// server.js
 const express = require('express');
-const mongoose = require('mongoose');
+const { MongoClient } = require('mongodb');
 const bodyParser = require('body-parser');
-const itemRoutes = require('./routes/items'); // Correct route import
+const path = require('path');
 
 const app = express();
-const PORT = 3000;
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
-// Middleware
-app.use(bodyParser.json());
+const url = 'mongodb://localhost:27017'; // your MongoDB URL
+const dbName = 'smartInventoryDB';
+let db;
 
-// Routes
-app.use('/api/items', itemRoutes);
+MongoClient.connect(url, { useUnifiedTopology: true })
+    .then(client => {
+        console.log('Connected to MongoDB');
+        db = client.db(dbName);
+    })
+    .catch(err => console.error(err));
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public'))); // Serve public folder
+
+// Load homepage
 app.get('/', (req, res) => {
-    res.send('Welcome to Smart Inventory Manager');
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-mongoose.connect('mongodb://localhost:27017/inventory_db', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
-    console.log('MongoDB connected');
-    app.listen(PORT, () => {
-        console.log(`Server running on http://localhost:${PORT}`);
+// Add new item
+app.post('/add', (req, res) => {
+    const newItem = {
+        title: req.body.title,
+        description: req.body.description
+    };
+
+    db.collection('inventory').insertOne(newItem)
+        .then(result => {
+            console.log('Item added');
+            io.emit('itemAdded', newItem);
+            res.redirect('/');
+        })
+        .catch(err => console.error(err));
+});
+
+// Socket connection
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
     });
-}).catch((err) => {
-    console.error('MongoDB connection error:', err);
+});
+
+// Start server
+http.listen(3000, () => {
+    console.log('Server running at http://localhost:3000');
 });
